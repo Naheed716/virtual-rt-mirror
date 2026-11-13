@@ -25,7 +25,7 @@ if mirror=="A - CT Sim":
     scan_type=st.radio("Scan Type",["1 - Plain Scan","2 - Contrast Scan","3 - Post-Contrast Scan"],horizontal=True,key="st")
     slice_no=st.slider("CT Slice Number",1,20,10,key="sl")
     if "Plain" in scan_type: bg="#F1F2F6";gc="#B2BEC3";al=0.6;desc="Plain: Bina Contrast, Tumor halka";enh="No Enhancement"
-    elif "Post" not in scan_type: bg="#FFEAA7";gc="#E17055";al=0.9;desc="Contrast: Tumor bright, Boundary isi me banti hai";enh="Bright"
+        elif "Post" not in scan_type: bg="#FFEAA7";gc="#E17055";al=0.9;desc="Contrast: Tumor bright, Boundary isi me banti hai";enh="Bright"
     else: bg="#FDCB6E";gc="#D63031";al=0.8;desc="Post-Contrast: Washout dekhte hain";enh="Washout"
     st.write(desc)
     if st.button("📸 SCAN",use_container_width=True,key="sb"):
@@ -73,7 +73,8 @@ elif mirror=="B - TPS":
     ax2.plot(x,100/(1+np.exp((x-oar_dose)/4)),color="blue",linewidth=3,label=f"{p['oar_full']} - {oar_dose} Gy")
     ax2.set_xlim(0,80);ax2.set_ylim(0,105);ax2.set_xlabel("Dose (Gy)");ax2.set_ylabel("Volume (%)");ax2.set_title(f"DVH - {patient}");ax2.grid(True,linestyle="--",alpha=0.4);ax2.legend()
     st.pyplot(fig2);plt.close(fig2)
-    if st.button("✅ APPROVE",use_container_width=True,key="ap"): st.balloons();st.success("Plan APPROVED - Heart Secure hai")elif mirror=="C - LINAC":
+    if st.button("✅ APPROVE",use_container_width=True,key="ap"): st.balloons();st.success("Plan APPROVED - Heart Secure hai")
+    elif mirror=="C - LINAC":
     st.subheader("⚡ C - LINAC Mirror")
     gantry=st.slider("Gantry Angle",0,360,90,5,key="lg")
     st.markdown("### 🔲 Collimator Jaws")
