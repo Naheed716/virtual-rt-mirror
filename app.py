@@ -257,3 +257,5 @@ else:
 
 st.markdown("---")
 st.caption("Virtual RT Mirror | CT Sim → TPS → LINAC / Cobalt-60")
+st.markdown("---")
+st.markdown("Developed by: Naheed | BS Physics")
