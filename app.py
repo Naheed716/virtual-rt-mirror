@@ -229,7 +229,7 @@ if "PART 1" in part:
         jaw_w = max(field_x / 2.5, 0.8)
         ax.add_patch(patches.Rectangle((dx-jaw_w/2, dy-2.5), jaw_w, 1.0, facecolor="#FFD700", edgecolor="black"))
         ax.text(dx, dy-2.0, f"Jaws {field_x}x{field_y}", ha="center", va="center", fontsize=6, fontweight="bold")
-                ax.text(dx+3.5, dy-2.0, f"X1 {x1} | X2 {x2}\nY1 {y1} | Y2 {y2}", fontsize=6, fontweight="bold", bbox=dict(facecolor="white", edgecolor="black"))
+        ax.text(dx+3.5, dy-2.0, f"X1 {x1} | X2 {x2}\nY1 {y1} | Y2 {y2}", fontsize=6, fontweight="bold", bbox=dict(facecolor="white", edgecolor="black"))
         ax.add_patch(patches.Rectangle((-6, -1.5), 12, 2, facecolor="#57606F", edgecolor="black"))
         ax.text(0, -0.5, "COUCH", ha="center", va="center", fontsize=7, color="white", fontweight="bold")
         ax.add_patch(patches.Ellipse((cx, cy), 5, 2.5, facecolor=p["color"], alpha=0.8, edgecolor="black"))
