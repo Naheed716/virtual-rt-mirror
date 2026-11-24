@@ -416,7 +416,7 @@ else:
         ax2.add_patch(patches.Rectangle((3, 0.5), 1, 1, facecolor="#444444", edgecolor="white")); ax2.text(3.5, 1, "DETECTOR", ha="center", fontsize=7, fontweight="bold", color="white")
         ax2.annotate("", xy=(-1.5, 1), xytext=(-3, 1), arrowprops=dict(arrowstyle="->", color="#DC2626", lw=2))
         ax2.annotate("", xy=(3, 1), xytext=(1.5, 1), arrowprops=dict(arrowstyle="->", color="#D4AF37", lw=2))
-                ax2.set_xlim(-5, 5); ax2.set_ylim(-0.5, 2.5); ax2.axis("off"); ax2.set_title("CT Sim — Ray Diagram", fontweight="bold", color="white")
+        ax2.set_xlim(-5, 5); ax2.set_ylim(-0.5, 2.5); ax2.axis("off"); ax2.set_title("CT Sim — Ray Diagram", fontweight="bold", color="white")
         st.pyplot(fig2)
 
     elif optics_mirror == "TPS":
