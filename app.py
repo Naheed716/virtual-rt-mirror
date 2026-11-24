@@ -439,7 +439,7 @@ else:
         fig2.patch.set_facecolor('#141414'); ax2.set_facecolor('#0A0A0A'); ax2.title.set_color('white')
         ax2.add_patch(patches.Circle((0, 0), 1.0, facecolor="#DC2626", alpha=0.9)); ax2.text(0, 0, "TUMOR", ha="center", va="center", fontsize=7, color="white", fontweight="bold")
         for ang in [30, 90, 150, 210, 270, 330]:
-        a = math.radians(ang); ax2.plot([0, math.cos(a)*3], [0, math.sin(a)*3], color="#D4AF37", linewidth=2, alpha=0.85)
+            a = math.radians(ang); ax2.plot([0, math.cos(a)*3], [0, math.sin(a)*3], color="#D4AF37", linewidth=2, alpha=0.85)
         ax2.add_patch(patches.Ellipse((0, 0), 7, 7, facecolor="none", edgecolor="white"))
         ax2.text(0, 3.8, "Ray Tracing — 6 Beams Meeting at Tumor", ha="center", fontsize=7, fontweight="bold", color="white")
         ax2.set_xlim(-4, 4); ax2.set_ylim(-4, 4); ax2.set_aspect("equal"); ax2.axis("off"); ax2.set_title("TPS — Ray Tracing Diagram", fontweight="bold", color="white")
