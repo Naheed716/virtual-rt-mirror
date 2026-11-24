@@ -484,4 +484,29 @@ else:
         st.markdown("### 5. CSI Junction — Young's Interference")
         st.write("**Definition:** Junction is where two fields meet. Hot Spot = Excess dose, Cold Spot = Underdose.")
         st.latex(r"I = I_1 + I_2 + 2\sqrt{I_1 I_2}\cos\delta")
-        st.write("In CSI, 3 fields join: Brain + Upper Spine + Lower Spine.
+        st.write("In CSI, 3 fields join: Brain + Upper Spine + Lower Spine. At their junction, Hot Spot / Cold Spot is formed.")
+        gap = st.slider("Junction Gap / Overlap (cm)", -1.0, 1.0, 0.0, 0.1)
+        x = np.linspace(-3, 3, 300)
+        b1 = np.exp(-((x+gap/2+1)**2)/0.5); b2 = np.exp(-((x-gap/2-1)**2)/0.5)
+        total = b1 + b2
+        fig, ax = plt.subplots(figsize=(5, 3))
+        fig.patch.set_facecolor('white'); ax.set_facecolor('#F8FAFC')
+        ax.plot(x, b1, color="#DC2626", linestyle="--", label="Brain Field", linewidth=2)
+        ax.plot(x, b2, color="#0F2340", linestyle="--", label="Spine Field", linewidth=2)
+        ax.plot(x, total, color="#0E7C7B", linewidth=3, label="Total Dose at Junction")
+        ax.fill_between(x, total, alpha=0.12, color="#0E7C7B")
+        ax.set_xlabel("Position"); ax.set_ylabel("Dose"); ax.set_title(f"CSI Junction — Gap {gap} cm", fontweight="bold"); ax.legend(); ax.grid(True, alpha=0.25)
+        st.pyplot(fig)
+        if gap == 0: st.success("Perfect Junction — No Hot / Cold Spot")
+        elif gap > 0: st.error(f"Gap {gap} cm = Cold Spot — Analogous to Young's Destructive Interference")
+        else: st.error(f"Overlap {abs(gap)} cm = Hot Spot — Analogous to Young's Constructive Interference")
+
+st.markdown("---")
+st.markdown("""
+<div style="background: #0F2340; padding: 20px 22px; border-radius: 12px; text-align: center; color: white;">
+  <div style="font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700;">Optics Behind Virtual RT Mirror App</div>
+  <div style="font-size: 12.5px; color: #CBD5E1; margin-top: 4px;">Part 1: Simulation &nbsp;|&nbsp; Part 2: Wavelength, Reflection & Young's Interference</div>
+  <div style="font-size: 12px; color: #7DD3C8; font-weight: 600; margin-top: 8px; letter-spacing: 0.5px;">DEVELOPED BY: NAHEED &nbsp;|&nbsp; BS PHYSICS</div>
+</div>
+""", unsafe_allow_html=True)
+st.caption("Virtual RT Mirror | CT Sim → TPS → LINAC / Cobalt-60")
