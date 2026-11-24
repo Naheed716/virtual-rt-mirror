@@ -345,7 +345,7 @@ else:
     st.subheader("Part 2 — Optics Behind It")
     st.write("The clinical workflow shown in Part 1 is explained here through fundamental optics.")
 
-    with st.expander("Glossary — All Difficult Terms Explained in English"):
+    with st.expander("Glossary — All Terms Explained here for you buddies"):
         st.write("**Wavelength (λ):** The distance between two waves. Shorter wavelength means higher energy.")
         st.write("**Frequency (f):** How many waves pass in 1 second. Formula: f = c / λ")
         st.write("**Energy (E):** The power of radiation. Formula: E = hf")
