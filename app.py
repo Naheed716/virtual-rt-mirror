@@ -20,7 +20,7 @@ if page == "🤖 AI Tutor":
     st.write("Ask anything about Radiotherapy, CT, TPS, LINAC, Cobalt-60")
 
     genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-    model = genai.GenerativeModel("gemini-2.0-flash")
+    model = genai.GenerativeModel("gemini-2.5-flash")
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
