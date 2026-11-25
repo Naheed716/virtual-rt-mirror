@@ -14,8 +14,8 @@ page = st.sidebar.radio(
 st.sidebar.markdown("---")
 st.sidebar.info("Virtual RT Mirror")
 if page == "👩🏻‍⚕️ AI Tutor":
-    st.title("👩🏻‍⚕️ AI Tutor — Radiotherapy")
-    st.caption("Free AI Assistant | No Key Required")
+    st.title("👩🏻‍⚕️ AI Tutor")
+    st.caption("Ask anything about Radiotherapy")
 
     import urllib.parse
 
