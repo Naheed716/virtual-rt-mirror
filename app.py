@@ -5,18 +5,6 @@ import numpy as np
 import math
 
 st.set_page_config(page_title="Virtual RT Mirror | Radiotherapy Simulation", layout="centered")
-# ===== TOP NAVIGATION BUTTONS - YAHAN LAGANA HAI =====
-c1, c2, c3, c4 = st.columns(4)
-with c1:
-    if st.button("🏠\nHome", use_container_width=True): st.session_state.page = "Home"
-with c2:
-    if st.button("🔬\nOptics", use_container_width=True): st.session_state.page = "Optics"
-with c3:
-    if st.button("👧🏻\nAI Tutor", use_container_width=True): st.session_state.page = "AI Tutor"
-with c4:
-    if st.button("📖\nGlossary", use_container_width=True): st.session_state.page = "Glossary"
-
-page = st.session_state.page
 # ===== SIDEBAR NAVIGATION - NEW =====
 page = st.sidebar.radio(
     "Go To Module",
