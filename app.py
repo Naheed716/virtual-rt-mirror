@@ -12,17 +12,16 @@ page = st.sidebar.radio(
 )
 st.sidebar.markdown("---")
 st.sidebar.info("Virtual RT Mirror")
-# ===== AI TUTOR PAGE =====
-if page == "🤖 AI Tutor":
+# ===== 3. AI TUTOR PAGE - GROQ FREE AI =====
+if page == "AI Tutor":
     st.title("🤖 AI Tutor - RT Mirror")
     st.write("Ask anything about Radiotherapy, CT, TPS, LINAC, Cobalt-60")
-
-    from google import genai
-    client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
+    
+    import requests
+    import json
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
-
     for msg in st.session_state.messages:
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
@@ -32,19 +31,31 @@ if page == "🤖 AI Tutor":
         with st.chat_message("user"):
             st.markdown(prompt)
 
-        full_prompt = f"You are a Radiotherapy teacher. Explain in simple English, max 150 words. Question: {prompt}"
-
         with st.chat_message("assistant"):
             with st.spinner("Thinking..."):
                 try:
-                    response = client.models.generate_content(
-                        model="gemini-3.8-flash",
-                        contents=full_prompt
-                    )
-                    st.markdown(response.text)
-                    st.session_state.messages.append({"role": "assistant", "content": response.text})
+                    # GROQ FREE MODEL - Llama 3.3
+                    url = "https://api.groq.com/openai/v1/chat/completions"
+                    headers = {
+                        "Authorization": f"Bearer {st.secrets['GROQ_API_KEY']}",
+                        "Content-Type": "application/json"
+                    }
+                    data = {
+                        "model": "llama-3.3-70b-versatile",
+                        "messages": [
+                            {"role": "system", "content": "You are a Radiotherapy teacher. Explain in simple English, max 150 words, in easy words for BS student."},
+                            {"role": "user", "content": prompt}
+                        ],
+                        "temperature": 0.7,
+                        "max_tokens": 500
+                    }
+                    response = requests.post(url, headers=headers, json=data, timeout=30)
+                    result = response.json()
+                    answer = result["choices"][0]["message"]["content"]
+                    st.markdown(answer)
+                    st.session_state.messages.append({"role": "assistant", "content": answer})
                 except Exception as e:
-                    st.error(f"Error: {e}")
+                    st.error(f"Error: {e} - Check GROQ_API_KEY in Secrets")
     st.stop()
 st.markdown("""
 <style>
