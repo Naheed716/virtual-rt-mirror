@@ -8,17 +8,15 @@ st.set_page_config(page_title="Virtual RT Mirror | Radiotherapy Simulation", lay
 # ===== SIDEBAR NAVIGATION - NEW =====
 page = st.sidebar.radio(
     "Go To Module",
-    ["🏠 RT Mirror - Main App", "👧🏻 AI Tutor"]
+    ["🏠 RT Mirror - Main App", "👩🏻‍⚕️ AI Tutor"]
 )
 st.sidebar.markdown("---")
 st.sidebar.info("Virtual RT Mirror")
-# ===== 3. AI TUTOR PAGE - GROQ FREE AI =====
-if page == "👧🏻 AI Tutor":
-    st.title("👧🏻 AI Tutor - RT Mirror")
-    st.write("Ask anything about Radiotherapy, CT, TPS, LINAC, Cobalt-60")
-    
-    import requests
-    import json
+elif page == "👩🏻‍⚕️ AI Tutor":
+    st.title("👩🏻‍⚕️ AI Tutor — Radiotherapy")
+    st.caption("Free AI Assistant | No Key Required")
+
+    import urllib.parse
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
@@ -26,37 +24,23 @@ if page == "👧🏻 AI Tutor":
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
 
-    if prompt := st.chat_input("e.g. What is Penumbra?"):
+    if prompt := st.chat_input("Ask anything - e.g. What is QUANTEC?"):
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
-
         with st.chat_message("assistant"):
             with st.spinner("Thinking..."):
                 try:
-                    # GROQ FREE MODEL - Llama 3.3
-                    url = "https://api.groq.com/openai/v1/chat/completions"
-                    headers = {
-                        "Authorization": f"Bearer {st.secrets['GROQ_API_KEY']}",
-                        "Content-Type": "application/json"
-                    }
-                    data = {
-                        "model": "llama-3.3-70b-versatile",
-                        "messages": [
-                            {"role": "system", "content": "You are a Radiotherapy teacher. Explain in simple English, max 150 words, in easy words for BS student."},
-                            {"role": "user", "content": prompt}
-                        ],
-                        "temperature": 0.7,
-                        "max_tokens": 500
-                    }
-                    response = requests.post(url, headers=headers, json=data, timeout=30)
-                    result = response.json()
-                    answer = result["choices"][0]["message"]["content"]
-                    st.markdown(answer)
-                    st.session_state.messages.append({"role": "assistant", "content": answer})
+                    # Pollinations - Free, No Key Needed
+                    full_prompt = f"You are an Advanced Radiotherapy Physics professor. Answer formally in 150 words with Definition, Clinical Significance and Example. Question: {prompt}"
+                    encoded = urllib.parse.quote(full_prompt)
+                    url = f"https://text.pollinations.ai/{encoded}"
+                    r = requests.get(url, timeout=60)
+                    ans = r.text
+                    st.markdown(ans)
+                    st.session_state.messages.append({"role": "assistant", "content": ans})
                 except Exception as e:
-                    st.error(f"Error: {e} - Check GROQ_API_KEY in Secrets")
-    st.stop()
+                    st.error(f"Error: {e} - Try again")
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
