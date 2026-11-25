@@ -11,14 +11,13 @@ page = st.sidebar.radio(
     ["🏠 RT Mirror - Main App", "🤖 AI Tutor"]
 )
 st.sidebar.markdown("---")
-st.sidebar.info("Virtual RT Mirror - Thesis Project")
+st.sidebar.info("Virtual RT Mirror")
 
 # ===== AI TUTOR PAGE - IF SELECTED, SHOW ONLY TUTOR AND STOP =====
 if page == "🤖 AI Tutor":
     st.title("🤖 AI Tutor - RT Mirror")
     st.write("Ask anything about Radiotherapy, CT, TPS, LINAC, Cobalt-60")
 
-    genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
     model = genai.GenerativeModel("gemini-2.5-flash")
 
     if "messages" not in st.session_state:
