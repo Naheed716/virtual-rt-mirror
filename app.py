@@ -1,4 +1,5 @@
 import streamlit as st
+import google.generativeai as genai
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
@@ -75,7 +76,7 @@ if "PART 1" in part:
         "Knee and Foot Lock": "Locks knees and feet together. Legs remain at the same angle every day. Used in Breast, Pelvis, Abdomen, Esophagus and CSI.",
         "Breast Board": "Board for breast patients. Keeps both arms elevated and lifts the chest. Used in Breast.",
         "Head Rest E": "Head Rest Type E — For head and neck patients with extended neck position. Keeps the head tilted back.",
-        "Head Rest B": "Head Rest Type B — For head and neck patients with neutral neck position. Keeps the head straight.",
+        "Head Rest B": "Head Rest Type B — For Brain patients with neutral neck position. Keeps the head straight.",
         "Shoulder Puller": "Pulls shoulders down, so the neck area becomes clear and visible. Used in Head & Neck.",
     }
     device = st.selectbox("Select Immobilization Device", list(ALL_DEVICES.keys()))
@@ -86,7 +87,7 @@ if "PART 1" in part:
     if "Supine" in position: st.caption("Supine — Patient lying straight, face up. Most commonly used.")
     else: st.caption("Prone — Patient lying face down. Used in Breast to spare Heart, in CSI to keep Spine straight.")
     mask = st.checkbox(f"Mask / Immobilization {'(Required)' if p['mask'] else '(Not Used)'}", value=p["mask"])
-    mirror = st.radio("Select Module", ["A — CT Sim", "B — TPS", "C — LINAC", "D — Cobalt-60"], horizontal=True)
+    mirror= st.radio("Select Module", ["A — CT Sim", "B — TPS", "C — LINAC", "D — Cobalt-60", "AI Tutor"], horizontal=True)
 
     if mirror == "A — CT Sim":
         st.subheader("A — CT Simulation")
@@ -538,4 +539,38 @@ st.markdown("""
   <div style="font-size: 12px; color: #D4AF37; font-weight: 600; margin-top: 8px; letter-spacing: 0.5px;">DEVELOPED BY: NAHEED &nbsp;|&nbsp; BS PHYSICS</div>
 </div>
 """, unsafe_allow_html=True)
-st.caption("Virtual RT Mirror | CT Sim → TPS → LINAC / Cobalt-60")
+st.caption("Virtual RT Mirror")
+# ================= AI TUTOR PAGE =================
+if menu == "AI Tutor":
+    st.title("🤖 AI Tutor - RT Mirror")
+    st.write("Ask anything about Radiotherapy, CT, TPS, LINAC, Cobalt")
+
+    # Setup Gemini - only when this page opens
+    genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+    model = genai.GenerativeModel("gemini-1.5-flash")
+
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
+
+    for msg in st.session_state.messages:
+        with st.chat_message(msg["role"]):
+            st.markdown(msg["content"])
+
+    if prompt := st.chat_input("e.g. What is Penumbra?"):
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user"):
+            st.markdown(prompt)
+
+        full_prompt = f"""
+        You are a Radiotherapy teacher for BS students.
+        Explain in simple English, with a small example.
+        Keep answer short, max 150 words.
+        Question: {prompt}
+        """
+
+        with st.chat_message("assistant"):
+            with st.spinner("Thinking..."):
+                response = model.generate_content(full_prompt)
+                st.markdown(response.text)
+
+        st.session_state.messages.append({"role": "assistant", "content": response.text})
