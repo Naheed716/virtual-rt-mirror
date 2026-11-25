@@ -12,7 +12,7 @@ page = st.sidebar.radio(
 )
 st.sidebar.markdown("---")
 st.sidebar.info("Virtual RT Mirror")
-elif page == "👩🏻‍⚕️ AI Tutor":
+if page == "👩🏻‍⚕️ AI Tutor":
     st.title("👩🏻‍⚕️ AI Tutor — Radiotherapy")
     st.caption("Free AI Assistant | No Key Required")
 
