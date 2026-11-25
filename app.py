@@ -6,7 +6,6 @@ import numpy as np
 import math
 
 st.set_page_config(page_title="Virtual RT Mirror | Radiotherapy Simulation", layout="centered")
-st.write("HELLO - NEW CODE IS WORKING")
 # ===== SIDEBAR NAVIGATION - NEW =====
 page = st.sidebar.radio(
     "Go To Module",
@@ -21,7 +20,7 @@ if page == "🤖 AI Tutor":
     st.write("Ask anything about Radiotherapy, CT, TPS, LINAC, Cobalt-60")
 
     genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    model = genai.GenerativeModel("gemini-2.0-flash")
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
