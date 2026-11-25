@@ -12,11 +12,13 @@ page = st.sidebar.radio(
 )
 st.sidebar.markdown("---")
 st.sidebar.info("Virtual RT Mirror")
-
-# ===== AI TUTOR PAGE - IF SELECTED, SHOW ONLY TUTOR AND STOP =====
+# ===== AI TUTOR PAGE =====
 if page == "🤖 AI Tutor":
     st.title("🤖 AI Tutor - RT Mirror")
     st.write("Ask anything about Radiotherapy, CT, TPS, LINAC, Cobalt-60")
+
+    from google import genai
+    client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
@@ -25,26 +27,25 @@ if page == "🤖 AI Tutor":
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
 
-    if prompt := st.chat_input("e.g. What is field light?"):
+    if prompt := st.chat_input("e.g. What is Penumbra?"):
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
 
-        full_prompt = f"""
-        You are a Radiotherapy teacher for BS students.
-        Explain in simple English, with a small example.
-        Keep answer short, max 150 words.
-        Question: {prompt}
-        """
+        full_prompt = f"You are a Radiotherapy teacher. Explain in simple English, max 150 words. Question: {prompt}"
 
         with st.chat_message("assistant"):
             with st.spinner("Thinking..."):
-                st.markdown(response.text)
-
-        st.session_state.messages.append({"role": "assistant", "content": response.text})
-    
-    st.stop()  # This stops the old RT Mirror code from showing on Tutor page
-
+                try:
+                    response = client.models.generate_content(
+                        model="gemini-2.5-flash",
+                        contents=full_prompt
+                    )
+                    st.markdown(response.text)
+                    st.session_state.messages.append({"role": "assistant", "content": response.text})
+                except Exception as e:
+                    st.error(f"Error: {e}")
+    st.stop()
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
