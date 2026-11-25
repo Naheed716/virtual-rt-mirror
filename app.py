@@ -6,6 +6,49 @@ import numpy as np
 import math
 
 st.set_page_config(page_title="Virtual RT Mirror | Radiotherapy Simulation", layout="centered")
+# ===== SIDEBAR NAVIGATION - NEW =====
+page = st.sidebar.radio(
+    "Go To Module",
+    ["🏠 RT Mirror - Main App", "🤖 AI Tutor"]
+)
+st.sidebar.markdown("---")
+st.sidebar.info("Virtual RT Mirror - Thesis Project")
+
+# ===== AI TUTOR PAGE - IF SELECTED, SHOW ONLY TUTOR AND STOP =====
+if page == "🤖 AI Tutor":
+    st.title("🤖 AI Tutor - RT Mirror")
+    st.write("Ask anything about Radiotherapy, CT, TPS, LINAC, Cobalt-60")
+
+    genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+    model = genai.GenerativeModel("gemini-1.5-flash")
+
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
+
+    for msg in st.session_state.messages:
+        with st.chat_message(msg["role"]):
+            st.markdown(msg["content"])
+
+    if prompt := st.chat_input("e.g. What is Penumbra?"):
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user"):
+            st.markdown(prompt)
+
+        full_prompt = f"""
+        You are a Radiotherapy teacher for BS students.
+        Explain in simple English, with a small example.
+        Keep answer short, max 150 words.
+        Question: {prompt}
+        """
+
+        with st.chat_message("assistant"):
+            with st.spinner("Thinking..."):
+                response = model.generate_content(full_prompt)
+                st.markdown(response.text)
+
+        st.session_state.messages.append({"role": "assistant", "content": response.text})
+    
+    st.stop()  # This stops the old RT Mirror code from showing on Tutor page
 
 st.markdown("""
 <style>
@@ -540,37 +583,3 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 st.caption("Virtual RT Mirror")
-# ================= AI TUTOR PAGE =================
-if menu == "AI Tutor":
-    st.title("🤖 AI Tutor - RT Mirror")
-    st.write("Ask anything about Radiotherapy, CT, TPS, LINAC, Cobalt")
-
-    # Setup Gemini - only when this page opens
-    genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-    model = genai.GenerativeModel("gemini-1.5-flash")
-
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
-
-    for msg in st.session_state.messages:
-        with st.chat_message(msg["role"]):
-            st.markdown(msg["content"])
-
-    if prompt := st.chat_input("e.g. What is Penumbra?"):
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
-            st.markdown(prompt)
-
-        full_prompt = f"""
-        You are a Radiotherapy teacher for BS students.
-        Explain in simple English, with a small example.
-        Keep answer short, max 150 words.
-        Question: {prompt}
-        """
-
-        with st.chat_message("assistant"):
-            with st.spinner("Thinking..."):
-                response = model.generate_content(full_prompt)
-                st.markdown(response.text)
-
-        st.session_state.messages.append({"role": "assistant", "content": response.text})
