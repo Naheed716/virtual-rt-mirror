@@ -13,7 +13,7 @@ page = st.sidebar.radio(
 st.sidebar.markdown("---")
 st.sidebar.info("Virtual RT Mirror")
 # ===== 3. AI TUTOR PAGE - GROQ FREE AI =====
-if page == "AI Tutor":
+if page == "👧🏻 AI Tutor":
     st.title("👧🏻 AI Tutor - RT Mirror")
     st.write("Ask anything about Radiotherapy, CT, TPS, LINAC, Cobalt-60")
     
