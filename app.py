@@ -1,8 +1,9 @@
 import streamlit as st
+import requests
+import urllib.parse
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
-import math
 
 st.set_page_config(page_title="Virtual RT Mirror | Radiotherapy Simulation", layout="centered")
 # ===== SIDEBAR NAVIGATION - NEW =====
