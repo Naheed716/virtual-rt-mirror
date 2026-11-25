@@ -6,6 +6,7 @@ import numpy as np
 import math
 
 st.set_page_config(page_title="Virtual RT Mirror | Radiotherapy Simulation", layout="centered")
+st.write("HELLO - NEW CODE IS WORKING")
 # ===== SIDEBAR NAVIGATION - NEW =====
 page = st.sidebar.radio(
     "Go To Module",
