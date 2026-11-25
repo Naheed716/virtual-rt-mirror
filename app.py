@@ -39,7 +39,6 @@ if page == "🤖 AI Tutor":
 
         with st.chat_message("assistant"):
             with st.spinner("Thinking..."):
-                response = model.generate_content(full_prompt)
                 st.markdown(response.text)
 
         st.session_state.messages.append({"role": "assistant", "content": response.text})
