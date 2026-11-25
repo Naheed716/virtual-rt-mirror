@@ -18,8 +18,6 @@ if page == "🤖 AI Tutor":
     st.title("🤖 AI Tutor - RT Mirror")
     st.write("Ask anything about Radiotherapy, CT, TPS, LINAC, Cobalt-60")
 
-    model = genai.GenerativeModel("gemini-2.5-flash")
-
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
@@ -27,7 +25,7 @@ if page == "🤖 AI Tutor":
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
 
-    if prompt := st.chat_input("e.g. What is Penumbra?"):
+    if prompt := st.chat_input("e.g. What is field light?"):
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
