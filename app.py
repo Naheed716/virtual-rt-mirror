@@ -246,16 +246,12 @@ if "PART 1" in part:
                 rs_file.seek(0)
                 rs = pydicom.dcmread(io.BytesIO(rs_file.read()))
             
-                # Saare structures ke naam dikhao
-                st.write("--- **Marking Mili:** ---")
+                                # Saare structures ke naam dikhao
+                st.write("--- **Structures Found:** ---")
                 roi_names = {}
-            # Saare structures ke naam dikhao
-            st.write("--- **Marking Mili:** ---")
-            roi_names = {}
-            for roi in rs.StructureSetROISequence:
-                roi_names[roi.ROINumber] = roi.ROIName
-                st.write(f"✅ {roi.ROIName}")
-            
+                for roi in rs.StructureSetROISequence:
+                    roi_names[roi.ROINumber] = roi.ROIName
+                    st.write(f"✅ {roi.ROIName}")
             # Kaunsi marking dikhani hai?
             selected_roi = st.multiselect("Kaunsi Marking Dikhani Hai?", list(roi_names.values()), default=list(roi_names.values()))
 
