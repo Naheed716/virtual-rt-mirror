@@ -166,7 +166,7 @@ if "PART 1" in part:
             st.markdown(f"**GTV** — Gross Tumor Volume &nbsp;|&nbsp; **PTV Ring** — Planning Target Volume &nbsp;|&nbsp; **OAR** — {p['oar']}")
             st.table({"Scan": ["Plain", "Contrast", "Post-Contrast"], "Visibility": ["Anatomy Only", "Tumor Bright + Vessels", "Washout + OAR Clear"], "GTV Contour": ["Difficult", "Best — Contoured Here", "For Confirmation"]})
     elif mirror == "B — TPS":
-    st.subheader(" B — Treatment Planning System (TPS)")
+        st.subheader(" B — Treatment Planning System (TPS)")
         if patient == "CSI":
             st.warning("CSI — 3 Fields: Brain + Upper Spine + Lower Spine. Check Junction carefully.")
             junction_gap = st.slider("Junction Gap / Overlap (cm)", -1.0, 1.0, 0.0, 0.1)
