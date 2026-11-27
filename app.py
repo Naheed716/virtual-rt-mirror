@@ -206,22 +206,22 @@ if "PART 1" in part:
             st.markdown(f"**GTV** — Gross Tumor Volume &nbsp;|&nbsp; **PTV Ring** — Planning Target Volume &nbsp;|&nbsp; **OAR** — {p['oar']}")
             st.table({"Scan": ["Plain", "Contrast", "Post-Contrast"], "Visibility": ["Anatomy Only", "Tumor Bright + Vessels", "Washout + OAR Clear"], "GTV Contour": ["Difficult", "Best — Contoured Here", "For Confirmation"]})
     
-    elif mirror == "B — TPS":
+        elif mirror == "B — TPS":
         st.subheader(" B — Treatment Planning System (TPS)")
         tps_mode = st.radio("TPS Type", ["Simulated TPS", "Real TPS - Marking (RTSTRUCT)"], horizontal=True)
 
-    if tps_mode == "Real TPS - Marking (RTSTRUCT)":
-        st.info("Pehle CT upload karo, phir RTSTRUCT wali file (RS...dcm)")
-        ct_files = st.file_uploader("1. CT DICOM Upload Karo", type=["dcm"], accept_multiple_files=True, key="tps_ct")
-        rs_file = st.file_uploader("2. RTSTRUCT File Upload Karo (Sirf 1 file)", type=["dcm"], key="tps_rs")
+        if tps_mode == "Real TPS - Marking (RTSTRUCT)":
+            st.info("Pehle CT upload karo, phir RTSTRUCT wali file (RS...dcm)")
+            ct_files = st.file_uploader("1. CT DICOM Upload Karo", type=["dcm"], accept_multiple_files=True, key="tps_ct")
+            rs_file = st.file_uploader("2. RTSTRUCT File Upload Karo (Sirf 1 file)", type=["dcm"], key="tps_rs")
 
-        if ct_files and rs_file:
-            # CT load karo
-            ct_datasets = []
-            for f in ct_files:
-                try: ct_datasets.append(pydicom.dcmread(f))
-                except: pass
-            ct_datasets = sorted(ct_datasets, key=lambda x: float(x.get('SliceLocation', 0)))
+            if ct_files and rs_file:
+                # CT load karo
+                ct_datasets = []
+                for f in ct_files:
+                    try: ct_datasets.append(pydicom.dcmread(f))
+                    except: pass
+                ct_datasets = sorted(ct_datasets, key=lambda x: float(x.get('SliceLocation', 0)))
 
             # RTSTRUCT load karo
             rs = pydicom.dcmread(rs_file)
