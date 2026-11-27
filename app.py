@@ -247,66 +247,73 @@ if "PART 1" in part:
                 rs_file.seek(0)
                 rs = pydicom.dcmread(io.BytesIO(rs_file.read()))
             
-                                # Saare structures ke naam dikhao
+                # Saare structures ke naam dikhao
                 st.write("--- **Structures Found:** ---")
                 roi_names = {}
                 for roi in rs.StructureSetROISequence:
                     roi_names[roi.ROINumber] = roi.ROIName
                     st.write(f"✅ {roi.ROIName}")
-            # Kaunsi marking dikhani hai?
+
+                # Kaunsi marking dikhani hai?
                 selected_roi = st.multiselect("Kaunsi Marking Dikhani Hai?", list(roi_names.values()), default=list(roi_names.values()))
 
-            slice_no = st.slider("Slice Badlo", 0, len(ct_datasets)-1, len(ct_datasets)//2)
-            ds = ct_datasets[slice_no]
-            
-            # CT Image banao - Soft Tissue window
-            img = ds.pixel_array.astype(float)
-            if 'RescaleSlope' in ds:
-                img = img * float(ds.RescaleSlope) + float(ds.get('RescaleIntercept', 0))
-            img = np.clip(img, -160, 240)
-            img = ((img + 160) / 400 * 255).astype(np.uint8)
+                slice_no = st.slider("Slice Badlo", 0, len(ct_datasets)-1, len(ct_datasets)//2)
+                ds = ct_datasets[slice_no]
+                
+                # CT Image banao - Soft Tissue window
+                img = ds.pixel_array.astype(float)
+                if 'RescaleSlope' in ds:
+                    img = img * float(ds.RescaleSlope) + float(ds.get('RescaleIntercept', 0))
+                img = np.clip(img, -160, 240)
+                img = ((img + 160) / 400 * 255).astype(np.uint8)
 
-            fig, ax = plt.subplots(figsize=(6, 6))
-            ax.imshow(img, cmap='gray')
-            
-            # Colors har structure ke liye
-            color_map = {"GTV": "red", "CTV": "orange", "PTV": "yellow", "Heart": "pink", "Lung": "green", "Spinal Cord": "cyan", "Cord": "cyan", "Bladder": "blue", "Rectum": "purple"}
-            
-            # Contours draw karo
-            for roi_contour in rs.ROIContourSequence:
-                roi_num = roi_contour.ReferencedROINumber
-                roi_name = roi_names.get(roi_num, "")
+                fig, ax = plt.subplots(figsize=(6, 6))
+                ax.imshow(img, cmap='gray')
                 
-                # Agar user ne select nahi kiya to skip karo
-                if roi_name not in selected_roi:
-                    continue
-                if not hasattr(roi_contour, 'ContourSequence'):
-                    continue
+                # Colors har structure ke liye
+                color_map = {"GTV": "red", "CTV": "orange", "PTV": "yellow", "Heart": "pink", "Lung": "green", "Spinal Cord": "cyan", "Cord": "cyan", "Bladder": "blue", "Rectum": "purple"}
                 
-                for contour in roi_contour.ContourSequence:
-                    # Check karo ye contour isi slice ka hai ya nahi
-                    if hasattr(contour, 'ContourImageSequence'):
-                        ref_uid = contour.ContourImageSequence[0].ReferencedSOPInstanceUID
-                        if ref_uid != ds.SOPInstanceUID:
-                            continue
+                # Contours draw karo
+                for roi_contour in rs.ROIContourSequence:
+                    roi_num = roi_contour.ReferencedROINumber
+                    roi_name = roi_names.get(roi_num, "")
                     
-                    # Contour points
-                    data = np.array(contour.ContourData).reshape(-1, 3)
-                    # DICOM coordinates -> Pixel coordinates
-                    # ImagePositionPatient + PixelSpacing se convert
-                    ipp = np.array(ds.ImagePositionPatient)
-                    spacing = np.array(ds.PixelSpacing)
-                    # Simple convert: (x - ipp_x)/spacing_x , (y - ipp_y)/spacing_y
-                    # Note: Y ulta hota hai
-                    px = (data[:, 0] - ipp[0]) / spacing[0]
-                    py = (data[:, 1] - ipp[1]) / spacing[1]
+                    # Agar user ne select nahi kiya to skip karo
+                    if roi_name not in selected_roi:
+                        continue
+                    if not hasattr(roi_contour, 'ContourSequence'):
+                        continue
                     
-                    # Color select karo
-                    c = "red"
-                    for key in color_map:
-                        if key.lower() in roi_name.lower():
-                            c = color_map[key]
-                            break
+                    for contour in roi_contour.ContourSequence:
+                        # Check karo ye contour isi slice ka hai ya nahi
+                        if hasattr(contour, 'ContourImageSequence'):
+                            ref_uid = contour.ContourImageSequence[0].ReferencedSOPInstanceUID
+                            if ref_uid != ds.SOPInstanceUID:
+                                continue
+                        
+                        # Contour points
+                        data = np.array(contour.ContourData).reshape(-1, 3)
+                        # DICOM coordinates -> Pixel coordinates
+                        ipp = np.array(ds.ImagePositionPatient)
+                        spacing = np.array(ds.PixelSpacing)
+                        px = (data[:, 0] - ipp[0]) / spacing[0]
+                        py = (data[:, 1] - ipp[1]) / spacing[1]
+                        
+                        # Color select karo
+                        c = "red"
+                        for key in color_map:
+                            if key.lower() in roi_name.lower():
+                                c = color_map[key]
+                                break
+                        
+                        ax.plot(px, py, color=c, linewidth=2, label=roi_name)
+                
+                ax.set_title(f"Real TPS - Slice {slice_no+1}")
+                ax.axis('off')
+                st.pyplot(fig)
+                st.success("Yehi asli TPS marking hai - Doctor ne jo contour banaya tha, wohi dikh raha hai!")
+                st.stop()
+                 break
                     
                     ax.plot(px, py, color=c, linewidth=2, label=roi_name)
             
