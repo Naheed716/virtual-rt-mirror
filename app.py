@@ -6,6 +6,7 @@ import urllib.parse
 import matplotlib.patches as patches
 import numpy as np
 import matplotlib.pyplot as plt
+import io
 
 st.set_page_config(page_title="Virtual RT Mirror | Radiotherapy Simulation",page_icon="iconpng.jpg",layout="centered")
 # ===== SIDEBAR NAVIGATION - NEW =====
@@ -217,17 +218,37 @@ if "PART 1" in part:
             ct_files = st.file_uploader("1. CT DICOM Upload Karo", type=["dcm"], accept_multiple_files=True, key="tps_ct")
             rs_file = st.file_uploader("2. RTSTRUCT File Upload Karo (Sirf 1 file)", type=["dcm"], key="tps_rs")
 
-            if ct_files and rs_file:
-                # CT load karo
+                        if ct_files and rs_file:
+                # CT load karo - BytesIO wala fix
                 ct_datasets = []
                 for f in ct_files:
-                    try: ct_datasets.append(pydicom.dcmread(f))
-                    except: pass
-                ct_datasets = sorted(ct_datasets, key=lambda x: float(x.get('SliceLocation', 0)))
+                    try:
+                        f.seek(0)
+                        ds = pydicom.dcmread(io.BytesIO(f.read()))
+                        ct_datasets.append(ds)
+                    except Exception as e:
+                        st.warning(f"Ek CT file skip hui: {e}")
 
-            # RTSTRUCT load karo
-            rs = pydicom.dcmread(rs_file)
+                # Safe sort - SliceLocation na bhi ho to error nahi
+                def get_slice_loc(ds):
+                    try:
+                        if hasattr(ds, 'SliceLocation'):
+                            return float(ds.SliceLocation)
+                        if hasattr(ds, 'ImagePositionPatient'):
+                            return float(ds.ImagePositionPatient[2])
+                        return float(ds.get('InstanceNumber', 0))
+                    except:
+                        return 0
+
+                ct_datasets = sorted(ct_datasets, key=get_slice_loc)
+
+                # RTSTRUCT load karo - Isme bhi wahi BytesIO wala fix
+                rs_file.seek(0)
+                rs = pydicom.dcmread(io.BytesIO(rs_file.read()))
             
+                # Saare structures ke naam dikhao
+                st.write("--- **Marking Mili:** ---")
+                roi_names = {}
             # Saare structures ke naam dikhao
             st.write("--- **Marking Mili:** ---")
             roi_names = {}
