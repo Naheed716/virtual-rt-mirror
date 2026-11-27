@@ -18,7 +18,7 @@ st.sidebar.markdown("---")
 st.sidebar.info("Virtual RT Mirror")
 if page == "👩🏻‍⚕️ AI Tutor":
     st.title("👩🏻‍⚕️ AI Tutor")
-    st.caption("Ask anything")
+    st.caption("Ask anything about RT✨")
 
     import urllib.parse
 
@@ -631,4 +631,3 @@ st.markdown("""
   <div style="font-size: 12px; color: #D4AF37; font-weight: 600; margin-top: 8px; letter-spacing: 0.5px;">DEVELOPED BY: NAHEED &nbsp;|&nbsp; BS PHYSICS</div>
 </div>
 """, unsafe_allow_html=True)
-st.caption("Virtual RT Mirror")
