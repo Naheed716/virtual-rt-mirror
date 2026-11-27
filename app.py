@@ -305,7 +305,7 @@ if "PART 1" in part:
         if linac_pass: st.success(f"LINAC {qa_freq} PASSED — Machine is safe for treatment.")
         else: st.error(f"LINAC {qa_freq} FAILED — Do NOT treat. Contact Physicist.")
 
-    else:
+    elif mirror == "D — Cobalt-60":
         st.subheader("D — Cobalt-60 Unit")
         st.write("**Source: Co-60 | Half-Life 5.27 years | Energy 1.17 + 1.33 MeV | SSD 80 cm**")
         st.markdown("### ✦ Collimator Jaws — Field Setting (No MLC in Cobalt)")
