@@ -1,5 +1,6 @@
 import streamlit as st
 import math
+import pydicom
 import requests
 import urllib.parse
 import matplotlib.patches as patches
@@ -123,7 +124,7 @@ if "PART 1" in part:
     if "Supine" in position: st.caption("Supine — Patient lying straight, face up. Most commonly used.")
     else: st.caption("Prone — Patient lying face down. Used in Breast to spare Heart, in CSI to keep Spine straight.")
     mask = st.checkbox(f"Mask / Immobilization {'(Required)' if p['mask'] else '(Not Used)'}", value=p["mask"])
-    mirror= st.radio("Select Module", ["A — CT Sim", "B — TPS", "C — LINAC", "D — Cobalt-60"], horizontal=True)
+    mirror= st.radio("Select Module", ["A — CT Sim","CT DCOM Viewer", "B — TPS", "C — LINAC", "D — Cobalt-60"], horizontal=True)
 
     if mirror == "A — CT Sim":
         st.subheader("A — CT Simulation")
@@ -165,6 +166,22 @@ if "PART 1" in part:
             st.pyplot(fig)
             st.markdown(f"**GTV** — Gross Tumor Volume &nbsp;|&nbsp; **PTV Ring** — Planning Target Volume &nbsp;|&nbsp; **OAR** — {p['oar']}")
             st.table({"Scan": ["Plain", "Contrast", "Post-Contrast"], "Visibility": ["Anatomy Only", "Tumor Bright + Vessels", "Washout + OAR Clear"], "GTV Contour": ["Difficult", "Best — Contoured Here", "For Confirmation"]})
+    elif mirror == "CT DCOM Viewer":
+        st.title("CT DICOM Viewer")
+        st.subheader("CT DICOM Viewer")
+
+uploaded_file = st.file_uploader("CT DICOM file upload karo (.dcm)", type=["dcm"])
+
+if uploaded_file:
+    ds = pydicom.dcmread(uploaded_file)
+    image = ds.pixel_array
+
+    # CT Window - is se image saaf dikhegi
+    st.image(image, caption=f"Patient: {ds.get('PatientName', 'Anonymous')} | Slice: {ds.get('SliceLocation', '')}", clamp=True, use_column_width=True)
+    
+    st.write("Patient ID:", ds.get('PatientID', 'Hidden'))
+    st.write("Modality:", ds.get('Modality', 'CT'))
+    st.write("Slice Thickness:", ds.get('SliceThickness', ''))
     elif mirror == "B — TPS":
         st.subheader(" B — Treatment Planning System (TPS)")
         if patient == "CSI":
