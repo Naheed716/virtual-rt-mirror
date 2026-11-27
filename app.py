@@ -1,5 +1,6 @@
 import streamlit as st
 import math
+import pydicom
 import requests
 import urllib.parse
 import matplotlib.patches as patches
@@ -127,6 +128,45 @@ if "PART 1" in part:
 
     if mirror == "A — CT Sim":
         st.subheader("A — CT Simulation")
+            # --- REAL DICOM OPTION ---
+    ct_mode = st.radio("CT Type", ["Simulated CT (Drawing)", "Real DICOM CT (Upload)"], horizontal=True)
+
+    if ct_mode == "Real DICOM CT (Upload)":
+        st.info("Apni poori CT ke saare .dcm files ek saath select karo")
+        uploaded_files = st.file_uploader("CT DICOM Upload Karo", type=["dcm"], accept_multiple_files=True)
+        
+        if uploaded_files:
+            datasets = []
+            for f in uploaded_files:
+                try:
+                    ds = pydicom.dcmread(f)
+                    datasets.append(ds)
+                except:
+                    pass
+            
+            datasets = sorted(datasets, key=lambda x: float(x.get('SliceLocation', 0)))
+            
+            slice_num = st.slider("Real Slice Badlo", 0, len(datasets)-1, len(datasets)//2)
+            ds = datasets[slice_num]
+            
+            window = st.selectbox("Window", ["Brain", "Lung", "Bone", "Soft Tissue"])
+            
+            img = ds.pixel_array.astype(float)
+            if 'RescaleSlope' in ds:
+                img = img * float(ds.RescaleSlope) + float(ds.get('RescaleIntercept', 0))
+            
+            windows = {"Brain": (40, 80), "Lung": (-600, 1500), "Bone": (400, 1800), "Soft Tissue": (50, 350)}
+            center, width = windows[window]
+            low = center - width/2
+            high = center + width/2
+            img = np.clip(img, low, high)
+            img = ((img - low) / (high - low) * 255).astype(np.uint8)
+            
+            st.image(img, caption=f"Real CT - Slice {slice_num+1} / {len(datasets)}", use_column_width=True)
+            st.write(f"Patient: {ds.get('PatientName', 'Anonymous')} | Thickness: {ds.get('SliceThickness', '')} mm")
+        # Agar file nahi hai to neeche wala simulated wala chalega
+    if ct_mode == "Simulated CT (Drawing)":
+        # --- YAHAN SE TUMHARA PURANA CT SIM CODE SHURU HOGA ---
         scan_type = st.radio("Scan Protocol", ["1 — Plain Scan", "2 — Contrast Scan", "3 — Post-Contrast Scan"], horizontal=True)
         slice_no = st.slider("CT Slice Number", 1, 20, 10)
         if "Plain" in scan_type:
