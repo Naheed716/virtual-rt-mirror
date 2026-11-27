@@ -6,7 +6,7 @@ import matplotlib.patches as patches
 import numpy as np
 import matplotlib.pyplot as plt
 
-st.set_page_config(page_title="Virtual RT Mirror | Radiotherapy Simulation", layout="centered")
+st.set_page_config(page_title="Virtual RT Mirror | Radiotherapy Simulation",page_icon="iconpng.jpg",layout="centered")
 # ===== SIDEBAR NAVIGATION - NEW =====
 page = st.sidebar.radio(
     "Go To Module",
