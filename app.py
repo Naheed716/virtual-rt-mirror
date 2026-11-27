@@ -2,9 +2,20 @@ import streamlit as st
 import math
 import requests
 import urllib.parse
-import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
+import matplotlib.pyplot as plt
+
+# White theme for ONLY graphs and diagrams
+plt.rcParams.update({
+    'figure.facecolor': 'white',
+    'axes.facecolor': 'white',
+    'axes.edgecolor': 'black',
+    'axes.labelcolor': 'black',
+    'xtick.color': 'black',
+    'ytick.color': 'black',
+    'text.color': 'black'
+})
 
 st.set_page_config(page_title="Virtual RT Mirror | Radiotherapy Simulation", layout="centered")
 # ===== SIDEBAR NAVIGATION - NEW =====
