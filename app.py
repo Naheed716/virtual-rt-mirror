@@ -129,7 +129,7 @@ if "PART 1" in part:
     if mirror == "A — CT Sim":
         st.subheader("A — CT Simulation")
             # --- REAL DICOM OPTION ---
-    ct_mode = st.radio("CT Type", ["Simulated CT (Drawing)", "Real DICOM CT (Upload)"], horizontal=True)
+        ct_mode = st.radio("CT Type", ["Simulated CT (Drawing)", "Real DICOM CT (Upload)"], horizontal=True)
 
     if ct_mode == "Real DICOM CT (Upload)":
         st.info("Apni poori CT ke saare .dcm files ek saath select karo")
