@@ -9,13 +9,13 @@ st.set_page_config(page_title="Virtual RT Mirror | Radiotherapy Simulation", lay
 # ===== SIDEBAR NAVIGATION - NEW =====
 page = st.sidebar.radio(
     "Go To Module",
-    ["🏠 RT Mirror - Main App", "👩🏻‍⚕️ AI Tutor"]
+    [" RT Mirror - Main App", "👩🏻‍⚕️ AI Tutor"]
 )
 st.sidebar.markdown("---")
 st.sidebar.info("Virtual RT Mirror")
 if page == "👩🏻‍⚕️ AI Tutor":
     st.title("👩🏻‍⚕️ AI Tutor")
-    st.caption("Ask anything about Radiotherapy")
+    st.caption("Ask anything buddy hehehe")
 
     import urllib.parse
 
@@ -122,7 +122,7 @@ if "PART 1" in part:
     if "Supine" in position: st.caption("Supine — Patient lying straight, face up. Most commonly used.")
     else: st.caption("Prone — Patient lying face down. Used in Breast to spare Heart, in CSI to keep Spine straight.")
     mask = st.checkbox(f"Mask / Immobilization {'(Required)' if p['mask'] else '(Not Used)'}", value=p["mask"])
-    mirror= st.radio("Select Module", ["A — CT Sim", "B — TPS", "C — LINAC", "D — Cobalt-60", "AI Tutor"], horizontal=True)
+    mirror= st.radio("Select Module", ["A — CT Sim", "B — TPS", "C — LINAC", "D — Cobalt-60"], horizontal=True)
 
     if mirror == "A — CT Sim":
         st.subheader("A — CT Simulation")
