@@ -218,7 +218,7 @@ if "PART 1" in part:
             ct_files = st.file_uploader("1. CT DICOM Upload Karo", type=["dcm"], accept_multiple_files=True, key="tps_ct")
             rs_file = st.file_uploader("2. RTSTRUCT File Upload Karo (Sirf 1 file)", type=["dcm"], key="tps_rs")
 
-                        if ct_files and rs_file:
+            if ct_files and rs_file:
                 # CT load karo - BytesIO wala fix
                 ct_datasets = []
                 for f in ct_files:
