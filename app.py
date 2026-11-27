@@ -130,42 +130,41 @@ if "PART 1" in part:
         scan_type = st.radio("Scan Protocol", ["1 — Plain Scan", "2 — Contrast Scan", "3 — Post-Contrast Scan"], horizontal=True)
         slice_no = st.slider("CT Slice Number", 1, 20, 10)
         if "Plain" in scan_type:
-            bg = "#1A1A1A"; gtv_col = "#94A3B8"; gtv_alpha = 0.7; desc = "Plain Scan: Without contrast. Only anatomy is visible. Tumor appears faint."
+            bg = "white"; gtv_col = "#94A3B8"; gtv_alpha = 0.7; desc = "Plain Scan: Without contrast. Only anatomy is visible. Tumor appears faint."
             enh = "No Enhancement"
         elif "Post" not in scan_type:
-            bg = "#1A1A1A"; gtv_col = "#DC2626"; gtv_alpha = 0.9; desc = "Contrast Scan: After contrast injection. Tumor becomes bright, vessels visible. GTV is contoured on this scan."
+            bg = "white"; gtv_col = "#DC2626"; gtv_alpha = 0.9; desc = "Contrast Scan: After contrast injection. Tumor becomes bright, vessels visible. GTV is contoured on this scan."
             enh = "Bright Enhancement"
         else:
-            bg = "#1A1A1A"; gtv_col = "#B45309"; gtv_alpha = 0.85; desc = "Post-Contrast Scan: 60–90 sec after contrast. Washout of tumor is seen. Difference between OAR and tumor becomes clear."
+            bg = "white"; gtv_col = "#B45309"; gtv_alpha = 0.85; desc = "Post-Contrast Scan: 60–90 sec after contrast. Washout of tumor is seen. Difference between OAR and tumor becomes clear."
             enh = "Washout Phase"
         st.write(desc)
         if st.button("ACQUIRE SCAN", use_container_width=True):
             st.success(f"{scan_type} acquired — Slice {slice_no}/20 — {p['site']} — {enh}")
             fig, ax = plt.subplots(figsize=(5, 5))
-            fig.patch.set_facecolor('#141414'); ax.set_facecolor(bg)
-            ax.tick_params(colors='white'); ax.xaxis.label.set_color('white'); ax.yaxis.label.set_color('white'); ax.title.set_color('white')
-            for s in ax.spines.values(): s.set_color('#333333')
+            fig.patch.set_facecolor('white'); ax.set_facecolor(bg)
+            ax.tick_params(colors='black'); ax.xaxis.label.set_color('black'); ax.yaxis.label.set_color('black'); ax.title.set_color('black')
+            for s in ax.spines.values(): s.set_color('black')
             if patient == "CSI":
-                ax.add_patch(patches.Ellipse((0, 0), 6, 12, facecolor="#222222", edgecolor="white", linewidth=1.8))
+                ax.add_patch(patches.Ellipse((0, 0), 6, 12, facecolor="#E5E7EB", edgecolor="black", linewidth=1.8))
             else:
-                ax.add_patch(patches.Ellipse((0, 0), p["w"], p["h"], facecolor="#222222", edgecolor="white", linewidth=1.8))
+                ax.add_patch(patches.Ellipse((0, 0), p["w"], p["h"], facecolor="#E5E7EB", edgecolor="black", linewidth=1.8))
             gtv_r = 1.2 if 8 <= slice_no <= 12 else 0.7
-            ax.add_patch(patches.Circle(p["gtv"], gtv_r+0.6, facecolor="none", edgecolor="#D4AF37", linewidth=2, linestyle="--"))
-            ax.text(p["gtv"][0], p["gtv"][1]+gtv_r+0.9, "PTV", ha="center", fontsize=9, color="#D4AF37", fontweight="bold")
-            ax.add_patch(patches.Circle(p["gtv"], gtv_r, facecolor=gtv_col, alpha=gtv_alpha, edgecolor="white"))
+            ax.add_patch(patches.Circle(p["gtv"], gtv_r+0.6, facecolor="none", edgecolor="#B45309", linewidth=2, linestyle="--"))
+            ax.text(p["gtv"][0], p["gtv"][1]+gtv_r+0.9, "PTV", ha="center", fontsize=9, color="#B45309", fontweight="bold")
+            ax.add_patch(patches.Circle(p["gtv"], gtv_r, facecolor=gtv_col, alpha=gtv_alpha, edgecolor="black"))
             ax.text(p["gtv"][0], p["gtv"][1], "GTV", ha="center", va="center", fontsize=10, fontweight="bold", color="white")
-            ax.add_patch(patches.Circle(p["oar_pos"], 0.7, facecolor="#D4AF37", edgecolor="white"))
+            ax.add_patch(patches.Circle(p["oar_pos"], 0.7, facecolor="#D4AF37", edgecolor="black"))
             ax.text(p["oar_pos"][0], p["oar_pos"][1], p["oar"].split("/")[0], ha="center", va="center", fontsize=7, fontweight="bold", color="black")
-            ax.add_patch(patches.Circle(p["oar2"], 0.7, facecolor="#444444", edgecolor="white"))
-            ax.text(p["oar2"][0], p["oar2"][1], "OAR-2", ha="center", va="center", fontsize=6, fontweight="bold", color="white")
-            ax.text(0, 6.5, "Patient Left → Image Right", ha="center", fontsize=8, color="white", fontweight="bold")
-            ax.text(0, -6.5, f"{scan_type} | {enh}", ha="center", fontsize=8, fontweight="bold", color="black", bbox=dict(facecolor="white", edgecolor="#D4AF37", boxstyle="round,pad=0.4"))
+            ax.add_patch(patches.Circle(p["oar2"], 0.7, facecolor="#9CA3AF", edgecolor="black"))
+            ax.text(p["oar2"][0], p["oar2"][1], "OAR-2", ha="center", va="center", fontsize=6, fontweight="bold", color="black")
+            ax.text(0, 6.5, "Patient Left → Image Right", ha="center", fontsize=8, color="black", fontweight="bold")
+            ax.text(0, -6.5, f"{scan_type} | {enh}", ha="center", fontsize=8, fontweight="bold", color="white", bbox=dict(facecolor="black", edgecolor="#D4AF37", boxstyle="round,pad=0.4"))
             ax.set_xlim(-7, 7); ax.set_ylim(-7, 7); ax.set_aspect("equal")
-            ax.set_title(f"CT — {patient} — {scan_type} — Slice {slice_no}", fontweight="bold", color="white", fontsize=11); ax.grid(True, alpha=0.2, color="#444444")
+            ax.set_title(f"CT — {patient} — {scan_type} — Slice {slice_no}", fontweight="bold", color="black", fontsize=11); ax.grid(True, alpha=0.3, color="#CCCCCC")
             st.pyplot(fig)
             st.markdown(f"**GTV** — Gross Tumor Volume &nbsp;|&nbsp; **PTV Ring** — Planning Target Volume &nbsp;|&nbsp; **OAR** — {p['oar']}")
             st.table({"Scan": ["Plain", "Contrast", "Post-Contrast"], "Visibility": ["Anatomy Only", "Tumor Bright + Vessels", "Washout + OAR Clear"], "GTV Contour": ["Difficult", "Best — Contoured Here", "For Confirmation"]})
-
     elif mirror == "B — TPS":
         st.subheader("B — Treatment Planning System (TPS)")
         if patient == "CSI":
