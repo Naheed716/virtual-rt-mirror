@@ -315,7 +315,7 @@ if "PART 1" in part:
             ax2.text(6, 6, "SOURCE OFF\n(In Shield)", fontsize=8, color="#6B7280", fontweight="bold", bbox=dict(facecolor="white", edgecolor="#9CA3AF", boxstyle="round,pad=0.3"))
         ax2.add_patch(patches.Rectangle((-6, -1.5), 12, 2, facecolor="#E5E7EB", edgecolor="black"))
         ax2.text(0, -0.5, "COUCH", ha="center", va="center", fontsize=7, color="black", fontweight="bold")
-        ax2.add_patch(patches.Ellipse((0, 0), 5, 2.5
+        ax2.add_patch(patches.Ellipse((0, 0), 5, 2.5, facecolor=p["color"], alpha=0.9, edgecolor="black"))
         st.markdown("---")
         st.markdown("### Cobalt-60 QA — Quality Assurance")
         st.caption("QA = Quality Assurance. Verification before the first patient. Source movement and timer must be correct.")
