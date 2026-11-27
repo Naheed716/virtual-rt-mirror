@@ -208,7 +208,7 @@ if "PART 1" in part:
     
     elif mirror == "B — TPS":
         st.subheader(" B — Treatment Planning System (TPS)")
-            tps_mode = st.radio("TPS Type", ["Simulated TPS", "Real TPS - Marking (RTSTRUCT)"], horizontal=True)
+        tps_mode = st.radio("TPS Type", ["Simulated TPS", "Real TPS - Marking (RTSTRUCT)"], horizontal=True)
 
     if tps_mode == "Real TPS - Marking (RTSTRUCT)":
         st.info("Pehle CT upload karo, phir RTSTRUCT wali file (RS...dcm)")
