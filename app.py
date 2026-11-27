@@ -125,6 +125,9 @@ if "PART 1" in part:
     else: st.caption("Prone — Patient lying face down. Used in Breast to spare Heart, in CSI to keep Spine straight.")
     mask = st.checkbox(f"Mask / Immobilization {'(Required)' if p['mask'] else '(Not Used)'}", value=p["mask"])
     mirror= st.radio("Select Module", ["A — CT Sim", "B — TPS", "C — LINAC", "D — Cobalt-60"], horizontal=True)
+      # Default values taake NameError na aaye
+    ct_mode = "Simulated CT"
+    tps_mode = "Simulated TPS"
 
     if mirror == "A — CT Sim":
         st.subheader("A — CT Simulation")
