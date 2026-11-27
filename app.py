@@ -206,7 +206,7 @@ if "PART 1" in part:
             st.markdown(f"**GTV** — Gross Tumor Volume &nbsp;|&nbsp; **PTV Ring** — Planning Target Volume &nbsp;|&nbsp; **OAR** — {p['oar']}")
             st.table({"Scan": ["Plain", "Contrast", "Post-Contrast"], "Visibility": ["Anatomy Only", "Tumor Bright + Vessels", "Washout + OAR Clear"], "GTV Contour": ["Difficult", "Best — Contoured Here", "For Confirmation"]})
        
-        elif mirror == "B — TPS":
+    if mirror == "B — TPS":
         st.subheader(" B — Treatment Planning System (TPS)")
         tps_mode = st.radio("TPS Type", ["Simulated TPS", "Real TPS - Marking (RTSTRUCT)"], horizontal=True)
         if tps_mode == "Real TPS - Marking (RTSTRUCT)":
