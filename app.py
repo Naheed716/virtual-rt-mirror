@@ -219,6 +219,7 @@ if "PART 1" in part:
             rs_file = st.file_uploader("2. RTSTRUCT File Upload Karo (Sirf 1 file)", type=["dcm"], key="tps_rs")
 
             if ct_files and rs_file:
+                roi_names = {}
                 # CT load karo - BytesIO wala fix
                 ct_datasets = []
                 for f in ct_files:
@@ -253,7 +254,7 @@ if "PART 1" in part:
                     roi_names[roi.ROINumber] = roi.ROIName
                     st.write(f"✅ {roi.ROIName}")
             # Kaunsi marking dikhani hai?
-            selected_roi = st.multiselect("Kaunsi Marking Dikhani Hai?", list(roi_names.values()), default=list(roi_names.values()))
+                selected_roi = st.multiselect("Kaunsi Marking Dikhani Hai?", list(roi_names.values()), default=list(roi_names.values()))
 
             slice_no = st.slider("Slice Badlo", 0, len(ct_datasets)-1, len(ct_datasets)//2)
             ds = ct_datasets[slice_no]
