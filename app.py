@@ -298,8 +298,7 @@ if "PART 1" in part:
                         spacing = np.array(ds.PixelSpacing)
                         px = (data[:, 0] - ipp[0]) / spacing[0]
                         py = (data[:, 1] - ipp[1]) / spacing[1]
-                        
-                        # Color select karo
+                                   # Color select karo
                         c = "red"
                         for key in color_map:
                             if key.lower() in roi_name.lower():
@@ -308,22 +307,11 @@ if "PART 1" in part:
                         
                         ax.plot(px, py, color=c, linewidth=2, label=roi_name)
                 
-                ax.set_title(f"Real TPS - Slice {slice_no+1}")
+                ax.set_title(f"Real TPS Slice {slice_no+1}")
                 ax.axis('off')
                 st.pyplot(fig)
                 st.success("Yehi asli TPS marking hai - Doctor ne jo contour banaya tha, wohi dikh raha hai!")
                 st.stop()
-                 break
-                    
-                    ax.plot(px, py, color=c, linewidth=2, label=roi_name)
-            
-            ax.set_title(f"Real TPS - Slice {slice_no+1} - {roi_names}")
-            ax.axis('off')
-            st.pyplot(fig)
-            st.success("Yehi asli TPS marking hai - Doctor ne jo contour banaya tha, wohi dikh raha hai!")
-            
-            # Neeche wala simulated TPS na chale, isliye return
-            st.stop()
         if patient == "CSI":
             st.warning("CSI — 3 Fields: Brain + Upper Spine + Lower Spine. Check Junction carefully.")
             junction_gap = st.slider("Junction Gap / Overlap (cm)", -1.0, 1.0, 0.0, 0.1)
