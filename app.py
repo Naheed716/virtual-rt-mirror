@@ -509,8 +509,8 @@ def machine_controls(key_prefix, machine):
 
     elif mirror == "D — Cobalt-60":
         st.subheader("D — Cobalt-60 Unit")
-            with st.expander("🛠️ Cobalt-60 - Working Diagram", expanded=True):
-                machine_controls("cobalt", "Cobalt-60")
+        with st.expander("🛠️ Cobalt-60 - Working Diagram", expanded=True):
+            machine_controls("cobalt", "Cobalt-60")
         st.write("**Source: Co-60 | Half-Life 5.27 years | Energy 1.17 + 1.33 MeV | SSD 80 cm**")
         st.markdown("### ✦ Collimator Jaws — Field Setting (No MLC in Cobalt)")
         cj1, cj2 = st.columns(2)
