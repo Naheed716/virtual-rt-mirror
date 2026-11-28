@@ -455,9 +455,9 @@ def machine_controls(key_prefix, machine):
     elif mirror == "C — LINAC":
         st.subheader(" C — Linear Accelerator (LINAC)")
         if mirror == "C — LINAC":
-        st.subheader("C — LINAC Delivery")
-        with st.expander("🛠️ LINAC - Working Diagram", expanded=True):
-            machine_controls("linac", "LINAC")
+            st.subheader("C — LINAC Delivery")
+            with st.expander("🛠️ LINAC - Working Diagram", expanded=True):
+                machine_controls("linac", "LINAC")
         gantry = st.slider("Gantry Angle", 0, 360, 90, 5)
         st.markdown("### ✦ Collimator Jaws — Field Setting")
         st.caption("X1 = Left Jaw | X2 = Right Jaw | Y1 = Upper Jaw | Y2 = Lower Jaw | Field X = X1 + X2 | Field Y = Y1 + Y2")
