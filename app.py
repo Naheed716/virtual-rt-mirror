@@ -509,8 +509,6 @@ def machine_controls(key_prefix, machine):
 
     elif mirror == "D — Cobalt-60":
         st.subheader("D — Cobalt-60 Unit")
-        if mirror == "D — Cobalt-60":
-            st.subheader("D — Cobalt-60 Delivery")
             with st.expander("🛠️ Cobalt-60 - Working Diagram", expanded=True):
                 machine_controls("cobalt", "Cobalt-60")
         st.write("**Source: Co-60 | Half-Life 5.27 years | Energy 1.17 + 1.33 MeV | SSD 80 cm**")
@@ -577,9 +575,10 @@ def machine_controls(key_prefix, machine):
         cq8 = st.checkbox("Radiation Monitor in Room Working?", value=True, key="cobalt_monitor")
         cobalt_pass = (abs(cq1 - decayed) <= 0.1) and (cq2 <= 1) and (cq3 <= 2) and (cq4 <= 2) and cq5 and cq6 and cq7 and cq8
         st.table({"QA Test": ["Output / Dose Rate", "Timer Accuracy", "Light Field Match", "Laser Alignment", "Source Movement", "Door Interlock", "Emergency Stop", "Radiation Monitor"], "Result": [f"{cq1} Gy/min", f"{cq2} sec", f"{cq3} mm", f"{cq4} mm", "OK" if cq5 else "FAIL", "OK" if cq6 else "FAIL", "OK" if cq7 else "FAIL", "OK" if cq8 else "FAIL"], "Tolerance": [f"{decayed:.2f} ± 0.1 Gy/min", "< 1 sec", "< 2 mm", "< 2 mm", "Must be OK", "Must be OK", "Must be OK", "Must be OK"], "Status": ["PASS" if abs(cq1 - decayed) <= 0.1 else "FAIL", "PASS" if cq2 <= 1 else "FAIL", "PASS" if cq3 <= 2 else "FAIL", "PASS" if cq4 <= 2 else "FAIL", "PASS" if cq5 else "FAIL", "PASS" if cq6 else "FAIL", "PASS" if cq7 else "FAIL", "PASS" if cq8 else "FAIL"]})
-        if cobalt_pass: st.success(f"Cobalt-60 {c_qa_freq} PASSED — Machine is safe for treatment.")
-        else: st.error(f"Cobalt-60 {c_qa_freq} FAILED — Do NOT treat. Contact Physicist.")
-
+        if cobalt_pass:
+            st.success(f"Cobalt-60 {c_qa_freq} PASSED — Machine is safe for treatment.")
+        else:
+            st.error(f"Cobalt-60 {c_qa_freq} FAILED — Do NOT treat. Contact Physicist.")
 else:
     st.subheader("Part 2 — Optics Behind It")
     st.write("The clinical workflow shown in Part 1 is explained here through fundamental optics.")
