@@ -224,6 +224,8 @@ def machine_controls(key_prefix, machine):
 
     if mirror == "A — CT Sim":
         st.subheader("A — CT Simulation")
+                with st.expander("🛠️ CT Sim Machine - Working Diagram", expanded=True):
+            machine_controls("ctsim", "CT Sim")
             # --- REAL DICOM OPTION ---
         ct_mode = st.radio("CT Type", ["Simulated CT (Drawing)", "Real DICOM CT (Upload)"], horizontal=True)
 
@@ -452,6 +454,10 @@ def machine_controls(key_prefix, machine):
 
     elif mirror == "C — LINAC":
         st.subheader(" C — Linear Accelerator (LINAC)")
+        if mirror == "C — LINAC":
+        st.subheader("C — LINAC Delivery")
+        with st.expander("🛠️ LINAC - Working Diagram", expanded=True):
+            machine_controls("linac", "LINAC")
         gantry = st.slider("Gantry Angle", 0, 360, 90, 5)
         st.markdown("### ✦ Collimator Jaws — Field Setting")
         st.caption("X1 = Left Jaw | X2 = Right Jaw | Y1 = Upper Jaw | Y2 = Lower Jaw | Field X = X1 + X2 | Field Y = Y1 + Y2")
@@ -503,6 +509,10 @@ def machine_controls(key_prefix, machine):
 
     elif mirror == "D — Cobalt-60":
         st.subheader("D — Cobalt-60 Unit")
+        if mirror == "D — Cobalt-60":
+        st.subheader("D — Cobalt-60 Delivery")
+        with st.expander("🛠️ Cobalt-60 - Working Diagram", expanded=True):
+            machine_controls("cobalt", "Cobalt-60")
         st.write("**Source: Co-60 | Half-Life 5.27 years | Energy 1.17 + 1.33 MeV | SSD 80 cm**")
         st.markdown("### ✦ Collimator Jaws — Field Setting (No MLC in Cobalt)")
         cj1, cj2 = st.columns(2)
