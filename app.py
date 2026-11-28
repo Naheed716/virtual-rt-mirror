@@ -579,12 +579,11 @@ def machine_controls(key_prefix, machine):
             st.success(f"Cobalt-60 {c_qa_freq} PASSED — Machine is safe for treatment.")
         else:
             st.error(f"Cobalt-60 {c_qa_freq} FAILED — Do NOT treat. Contact Physicist.")
+            
 else:
     st.subheader("Part 2 — Optics Behind It")
     st.write("The clinical workflow shown in Part 1 is explained here through fundamental optics.")
-
     optics_mirror = st.radio("Select Optics Module", ["CT Sim", "TPS", "LINAC", "Cobalt-60", "CSI Junction"], horizontal=True)
-
     if optics_mirror == "CT Sim":
         st.markdown("### 1. CT Sim — Beer-Lambert Law + Wavelength")
         st.write("**Definition:** Beer-Lambert Law states that radiation intensity decreases exponentially as it passes through tissue.")
