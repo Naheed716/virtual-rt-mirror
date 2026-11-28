@@ -106,7 +106,99 @@ if "PART 1" in part:
     with c3: prof_card("PRESCRIBED DOSE", f"{p['dose']} Gy / {p['fx']} Fractions", "#B45309")
     st.write("")
     st.markdown(f'<div style="background:#141414; border:1px solid #2A2A2A; border-left:4px solid #D4AF37; padding:12px 14px; border-radius:8px; font-size:13px; color:#DDDDDD;"><b style="color:white;">Clinical Note:</b> {p["note"]}</div>', unsafe_allow_html=True)
+def draw_machine_diagram(machine, gantry, x1, x2, y1, y2, couch_x, couch_y, couch_z, couch_angle, collimator, ssd, laser_on, field_light, beam_on, source_on=True):
+    fig, ax = plt.subplots(figsize=(7, 7))
+    ax.set_xlim(-130, 130); ax.set_ylim(-135, 135); ax.set_aspect('equal'); ax.axis('off')
+    ax.set_title(f"{machine} | Gantry {gantry}° | Field {x1+x2} x {y1+y2} cm | SSD {ssd}cm | Coll {collimator}°", fontsize=11, weight='bold')
 
+    # 1. GANTRY
+    if machine == "CT Sim":
+        ax.add_patch(plt.Circle((0, 0), 95, fill=False, color='darkgray', linewidth=18))
+        ax.text(0, 95, "CT SIM - GANTRY", ha='center', fontsize=8, weight='bold')
+        ang = math.radians(gantry)
+        tx = 85 * math.sin(ang); ty = 85 * math.cos(ang)
+        ax.add_patch(plt.Circle((tx, ty), 10, color='red'))
+        ax.text(tx, ty, "TUBE", ha='center', va='center', color='white', fontsize=6, weight='bold')
+    else:
+        ax.add_patch(plt.Circle((0, 0), 90, fill=False, color='blue', linewidth=3, linestyle='--'))
+        ang = math.radians(gantry)
+        gx = 90 * math.sin(ang); gy = 90 * math.cos(ang)
+        ax.plot([0, gx], [0, gy], color='blue', linewidth=4)
+        hcol = 'darkblue' if machine == "LINAC" else 'darkgreen'
+        ax.add_patch(plt.Rectangle((gx-18, gy-15), 36, 30, color=hcol))
+        ax.text(gx, gy, "LINAC\nHEAD" if machine=="LINAC" else "Co-60\nHEAD", ha='center', va='center', color='white', fontsize=7, weight='bold')
+        if machine == "Cobalt-60":
+            txt = "● SOURCE BAHAR - Radiation ON" if source_on else "○ SOURCE ANDAR - Safe"
+            ax.text(gx, gy-28, txt, ha='center', color='red' if source_on else 'green', weight='bold', fontsize=8)
+        # Beam ka cone
+        if beam_on:
+            ax.plot([gx, couch_x], [gy, -25+couch_y+25], color='yellow', linewidth=10, alpha=0.35)
+
+    # 2. COUCH
+    cy_pos = -25 + couch_y
+    ax.add_patch(plt.Rectangle((-70 + couch_x, cy_pos), 140, 14, color='#8B4513'))
+    ax.text(couch_x, cy_pos+7, f"COUCH X:{couch_x} Y:{couch_y} Z:{couch_z} Ang:{couch_angle}°", ha='center', va='center', color='white', fontsize=7, weight='bold')
+    ax.add_patch(plt.Ellipse((couch_x, cy_pos+18), 70, 14, color='pink', edgecolor='black'))
+    ax.text(couch_x, cy_pos+18, "PATIENT", ha='center', va='center', fontsize=7, weight='bold')
+
+    # 3. FIELD LIGHT - X1 X2 Y1 Y2
+    if field_light:
+        fw = (x1+x2)*3; fh = (y1+y2)*3
+        cx_off = (x2-x1)*1.5 + couch_x; cy_off = cy_pos+25 + (y2-y1)*1.5
+        ax.add_patch(plt.Rectangle((cx_off-fw/2, cy_off-fh/2), fw, fh, fill=False, color='yellow', linewidth=2.5))
+        ax.plot([cx_off-fw/2, cx_off+fw/2], [cy_off, cy_off], color='yellow', linewidth=1, linestyle='--')
+        ax.plot([cx_off, cx_off], [cy_off-fh/2, cy_off+fh/2], color='yellow', linewidth=1, linestyle='--')
+        ax.text(cx_off-fw/2, cy_off+fh/2+5, f"X1={x1}", color='#B45309', fontsize=8, weight='bold', ha='right')
+        ax.text(cx_off+fw/2, cy_off+fh/2+5, f"X2={x2}", color='#B45309', fontsize=8, weight='bold', ha='left')
+        ax.text(cx_off+fw/2+2, cy_off, f"Y1={y1}", color='#B45309', fontsize=8, weight='bold')
+        ax.text(cx_off+fw/2+2, cy_off-10, f"Y2={y2}", color='#B45309', fontsize=8, weight='bold')
+        ax.text(cx_off, cy_off-fh/2-8, f"Field: {x1+x2} x {y1+y2} cm | Coll {collimator}°", ha='center', color='black', fontsize=8, weight='bold', bbox=dict(facecolor='yellow', alpha=0.8))
+
+    # 4. LASER
+    if laser_on:
+        ax.plot([-125, 125], [cy_pos+25, cy_pos+25], color='red', linewidth=1.5)
+        ax.plot([couch_x, couch_x], [-125, 125], color='red', linewidth=1.5)
+        ax.add_patch(plt.Circle((couch_x, cy_pos+25), 4, fill=False, color='red', linewidth=2))
+        ax.text(couch_x+8, cy_pos+30, "ISOCENTER", color='red', fontsize=7, weight='bold')
+        ax.text(-128, cy_pos+32, "LASER", color='red', fontsize=7, weight='bold')
+
+    if beam_on:
+        ax.text(0, -115, f"⚡ BEAM ON - SSD {ssd}cm", ha='center', color='red', weight='bold', bbox=dict(facecolor='yellow', alpha=0.8))
+    st.pyplot(fig)
+    c1, c2, c3, c4 = st.columns(4)
+    with c1: st.metric("Gantry", f"{gantry}°")
+    with c2: st.metric("Field", f"{x1+x2} x {y1+y2} cm")
+    with c3: st.metric("Couch", f"{couch_x}/{couch_y}/{couch_z}")
+    with c4: st.metric("X1/X2 - Y1/Y2", f"{x1}/{x2} - {y1}/{y2}")
+
+def machine_controls(key_prefix, machine):
+    c1, c2, c3, c4 = st.columns(4)
+    with c1:
+        gantry = st.slider("Gantry °", 0, 360, 0, key=f"g_{key_prefix}")
+        couch_angle = st.slider("Couch Angle °", -90, 90, 0, key=f"ca_{key_prefix}")
+    with c2:
+        x1 = st.slider("X1 (cm)", 0, 20, 10, key=f"x1_{key_prefix}")
+        x2 = st.slider("X2 (cm)", 0, 20, 10, key=f"x2_{key_prefix}")
+    with c3:
+        y1 = st.slider("Y1 (cm)", 0, 20, 10, key=f"y1_{key_prefix}")
+        y2 = st.slider("Y2 (cm)", 0, 20, 10, key=f"y2_{key_prefix}")
+    with c4:
+        couch_x = st.slider("Couch X", -20, 20, 0, key=f"cx_{key_prefix}")
+        couch_y = st.slider("Couch Y", -20, 20, 0, key=f"cy_{key_prefix}")
+        couch_z = st.slider("Couch Z", -20, 20, 0, key=f"cz_{key_prefix}")
+    c5, c6 = st.columns(2)
+    with c5:
+        collimator = st.slider("Collimator °", 0, 360, 0, key=f"col_{key_prefix}")
+        ssd = st.slider("SSD (cm)", 80, 120, 100, key=f"ssd_{key_prefix}")
+    with c6:
+        laser_on = st.checkbox("Laser ON 🔴", value=True, key=f"l_{key_prefix}")
+        field_light = st.checkbox("Field Light ON 💡", value=True, key=f"f_{key_prefix}")
+        beam_on = st.checkbox("BEAM ON", value=False, key=f"b_{key_prefix}")
+    source_on = True
+    if machine == "Cobalt-60":
+        source_on = st.radio("Source", ["ON - Bahar", "OFF - Andar"], key=f"s_{key_prefix}") == "ON - Bahar"
+        beam_on = beam_on or source_on
+    draw_machine_diagram(machine, gantry, x1, x2, y1, y2, couch_x, couch_y, couch_z, couch_angle, collimator, ssd, laser_on, field_light, beam_on, source_on) 
     st.markdown("### Immobilization Devices")
     st.caption("Immobilization — Keeping the patient in the exact same position every day, so radiation is delivered to the same target daily.")
     ALL_DEVICES = {
