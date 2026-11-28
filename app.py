@@ -224,7 +224,7 @@ def machine_controls(key_prefix, machine):
 
     if mirror == "A — CT Sim":
         st.subheader("A — CT Simulation")
-                with st.expander("🛠️ CT Sim Machine - Working Diagram", expanded=True):
+        with st.expander("🛠️ CT Sim Machine - Working Diagram", expanded=True):
             machine_controls("ctsim", "CT Sim")
             # --- REAL DICOM OPTION ---
         ct_mode = st.radio("CT Type", ["Simulated CT (Drawing)", "Real DICOM CT (Upload)"], horizontal=True)
